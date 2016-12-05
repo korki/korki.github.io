@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Temperaturka</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no' />
+  <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/keen-dashboards.css" />
+</head>
+<body class="application">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-sm-6">
+        <div class="chart-wrapper">
+          <div class="chart-title"></div>
+          <div class="chart-stage" id="t_chart"></div>
+          <div class="chart-notes"></div>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="chart-wrapper">
+          <div class="chart-title"></div>
+          <div class="chart-stage" id="h_chart"></div>
+          <div class="chart-notes"></div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="row">
+
+      <div class="col-sm-12">
+        <div class="chart-wrapper">
+          <div class="chart-title"></div>
+          <div class="chart-stage" id="temp_chart"></div>
+          <div class="chart-notes"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <script type="text/javascript" src="assets/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://d26b395fwzu5fz.cloudfront.net/3.4.1/keen.min.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+      var client = new Keen({
+        projectId: "58456e408db53dfda8a7b00c",
+        readKey: "7126E7DCED12A985DAAB8D86D625BA84B6AD068DB2C168289583663E597FCA1E89CF5BF45CF6BFFD39E76DEDB1458460023833B84128473E5054197C56DF5539F296E508E990D36380C28DDEECB94710BD082EAFF29DD8A2A30D6287F9F8D6E5"
+      });
+
+      Keen.ready(function(){
+
+        var temp_query = new Keen.Query("average", {
+          eventCollection: "reading",
+          targetProperty: "temperature",
+          timeframe: "this_5_minutes",
+          timezone: "UTC"
+        });
+
+        client.draw(temp_query, document.getElementById("t_chart"), {
+          // Custom configuration here
+        });
+
+
+        var humid_query = new Keen.Query("average", {
+          eventCollection: "reading",
+          targetProperty: "humidity",
+          timeframe: "this_5_minutes",
+          timezone: "UTC"
+        });
+
+        client.draw(humid_query, document.getElementById("h_chart"), {
+          // Custom configuration here
+        });
+
+        var temp_chart_query = new Keen.Query("average", {
+          eventCollection: "reading",
+          interval: "hourly",
+          targetProperty: "temperature",
+          timeframe: "this_24_hours",
+          timezone: "UTC"
+        });
+
+        client.draw(temp_chart_query, document.getElementById("temp_chart"), {
+          // Custom configuration here
+        });
+
+      });
+    </script>
+  </body>
+</html>
